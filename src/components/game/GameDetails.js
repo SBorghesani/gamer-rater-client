@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useLocation } from "react-router-dom"
 import { useHistory } from "react-router"
-import { getGame, getGameCategories } from "./GameManager.js"
+import { getGame, getGameCategories, deleteGame } from "./GameManager.js"
 
 
 
@@ -36,6 +36,17 @@ export const GameDetails = () => {
                 return ""
             }
         })}</h4>
+            <ul>
+        <h4>Reviews: {game?.reviews?.map(rev => {
+                return <li>{rev.review}</li>
+            })}</h4>
+            </ul>
+        <button onClick={event => {
+            event.preventDefault()
+            deleteGame(gameId)
+                .then(() => {history.push('/games')})
+        }
+        }>Delete Game</button>
     </>
     
     

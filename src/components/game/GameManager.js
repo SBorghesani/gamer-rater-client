@@ -19,9 +19,34 @@ export const createGame = (game) => {
         .then(res => res.json())
 }
 
+export const createReview = (review) => {
+    return fetch("http://localhost:8000/reviews", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        },
+        body: JSON.stringify(review)
+    })
+        .then(res => res.json())
+}
+
+export const getReviews = () => {
+    return fetch(`http://localhost:8000/reviews`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        }
+    })
+        .then(res => res.json())
+}
+
 export const deleteGame = (id) => {
-    return fetch(`http://127.0.0.1:8088/posts/${id}`,
-        { method: "DELETE" })
+    return fetch(`http://127.0.0.1:8000/games/${id}`, { 
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        }})
 }
 
 export const getGame = (id) => {
