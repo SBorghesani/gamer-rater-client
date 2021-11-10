@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useLocation } from "react-router-dom"
 import { useHistory } from "react-router"
-import { getGame, getGameCategories, deleteGame } from "./GameManager.js"
+import { getGame, getGameCategories, deleteGame, getGameRatings } from "./GameManager.js"
 
 
 
@@ -9,6 +9,7 @@ export const GameDetails = () => {
     const { gameId } = useParams()
     const [game, setGame] = useState({})
     const [gameCategories, setGameCategories] = useState([])
+    const [gameRatings, setGameRatings] = useState([])
     const history = useHistory()
 
     useEffect(() => {
@@ -21,6 +22,10 @@ export const GameDetails = () => {
             .then(res => setGameCategories(res))
     }, [])
 
+    useEffect(() => {
+        getGameRatings()
+            .then(res => setGameRatings(res))
+    }, [])
     
     return (<>
         <h2>{game.title}</h2>
@@ -36,6 +41,7 @@ export const GameDetails = () => {
                 return ""
             }
         })}</h4>
+        <h4>Average Rating: {game?.average_rating?.toFixed(2)}</h4>
             <ul>
         <h4>Reviews: {game?.reviews?.map(rev => {
                 return <li>{rev.review}</li>

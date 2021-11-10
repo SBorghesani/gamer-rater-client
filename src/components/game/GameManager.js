@@ -31,6 +31,18 @@ export const createReview = (review) => {
         .then(res => res.json())
 }
 
+export const createRating = (rating) => {
+    return fetch("http://localhost:8000/ratings", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        },
+        body: JSON.stringify(rating)
+    })
+        .then(res => res.json())
+}
+
 export const getReviews = () => {
     return fetch(`http://localhost:8000/reviews`, {
         headers: {
@@ -69,6 +81,15 @@ export const getCategories = () => {
 
 export const getGameCategories = () => {
     return fetch("http://localhost:8000/game_categories", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        }
+    })
+    .then(res => res.json())
+}
+
+export const getGameRatings = () => {
+    return fetch("http://localhost:8000/ratings", {
         headers: {
             "Authorization": `Token ${localStorage.getItem("gr_token")}`
         }
