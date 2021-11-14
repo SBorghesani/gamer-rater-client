@@ -23,6 +23,9 @@ export const GameList = (props) => {
                         <div className="game__title"><Link to={{pathname: `/games/${game.id}`}}>{game.title}</Link> by {game.designer}</div>
                         <div className="game__players">{game.num_players} players needed</div>
                         <div className="game__skillLevel">Age recommendation: {game.age_rec}</div>
+                        <div>
+                            <button className="btn-edit" onClick={() => history.push(`/game/edit/${game.id}`)}>Edit</button>
+                        </div>
                     </section>
                 })
             }

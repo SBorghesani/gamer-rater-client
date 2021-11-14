@@ -1,28 +1,44 @@
 import React, { useState, useEffect } from "react"
-import { useHistory } from 'react-router-dom'
-import { createGame, getGameCategories, getCategories } from './GameManager.js'
+import { useHistory, useParams } from 'react-router-dom'
+import { createGame, getCategories, getGame, updateGame} from './GameManager.js'
 
 
 export const GameForm = () => {
     const history = useHistory()
+    const { gameId } = useParams()
     const [categories, setCategories] = useState([])
-    // const [newCat, setNewCat] = useState({
-    //     cat_id: 0
-    // })
+    const [currentGame, setCurrentGame] = useState({})
 
-    const [currentGame, setCurrentGame] = useState({
-        title: "",
-        description: "",
-        designer: "",
-        year_released: 0,
-        num_players: 0,
-        time_to_play: 0,
-        age_rec: 0
-    })
+    
+    const getGameToEdit = () => {
+        if (gameId) {
+            getGame(gameId)
+            .then((foundGame => setCurrentGame({
+                ...foundGame,
+                gameCategoryId: foundGame.categories.id
+            })))
+        } else {
+            setCurrentGame({
+                title: "",
+                description: "",
+                designer: "",
+                year_released: 0,
+                num_players: 0,
+                time_to_play: 0,
+                age_rec: 0
+            })
+        }
+    }
+
+    console.log(currentGame.categories)
 
     useEffect(() => {
         getCategories().then(data => setCategories(data))
     }, [])
+
+    useEffect(() => {
+        getGameToEdit()
+    }, [gameId])
     
     const handleControlledInputChange = (event) => {
         const newGame = Object.assign({}, currentGame)
@@ -49,7 +65,7 @@ export const GameForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Register New Game</h2>
+            <h2 className="gameForm__title">{gameId ? 'Edit Game: ' : 'Register New Game: '}</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title: </label>
@@ -117,9 +133,8 @@ export const GameForm = () => {
                 <label htmlFor="category">Category: </label>
                 <select type="text" name="categories" className="form-control"
                     placeholder="Category"
-                    defaultValue="Choose a Category"
                     onChange={handleControlledInputChange}>
-                    <option>Choose a Category</option>
+                    <option>Select Category</option>
                     {
                         categories.map(c => <option name="categories" value={c.id}>{c.category}</option>)
                     }
@@ -140,8 +155,13 @@ export const GameForm = () => {
                         ageRec: parseInt(currentGame.age_rec),
                         categories: currentGame.categories
                     }
-                    createGame(game)
-                        .then(() => history.push("/games"))
+                    {
+                        gameId ? 
+                            updateGame(game, gameId)
+                                .then(() => history.push('/games'))
+                            : createGame(game)
+                                .then(() => history.push("/games"))
+                    }
                 }}
                 className="btn btn-primary">Create</button>
         </form>

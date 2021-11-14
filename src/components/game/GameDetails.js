@@ -47,6 +47,7 @@ export const GameDetails = () => {
                 return <li>{rev.review}</li>
             })}</h4>
             </ul>
+        <button onClick={() => {history.push(`/games/upload_image/${gameId}`)}}>Upload image of this game</button>
         <button onClick={event => {
             event.preventDefault()
             deleteGame(gameId)
